@@ -81,7 +81,7 @@ def compile_data():
 
 def visualize_data():
     df = pd.read_csv('SP500_joined_closes.csv')
-    # df['ACN'].plot()
+    # df['AAPL'].plot()
     # plt.show()
     df_corr = df.corr()
     print(df_corr.head())
@@ -108,5 +108,20 @@ def visualize_data():
     # plt.savefig("correlations.png", dpi = (300))
     plt.show()
 
-visualize_data()
+# visualize_data()
+
+def big_chart():    # Chart with every SP500
+    df = pd.read_csv('SP500_joined_closes.csv')
     
+    with open('sp500tickers.pickle', 'rb') as f:
+        tickers = pickle.load(f)
+
+    for ticker in tickers:
+        if os.path.exists('stock_dfs/{}.csv'.format(ticker)):    
+            print(ticker)
+            df[ticker].plot()
+
+    plt.show()
+# big_chart()
+
+
