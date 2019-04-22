@@ -39,18 +39,21 @@ def get_data(reload_sp500=False):
     if not os.path.exists('stock_dfs'):
         os.makedirs('stock_dfs')
     
-    start = dt.datetime(2000,1,1)
-    end = dt.datetime(2016,12,31)
+    start = dt.datetime(2015,1,1)
+    end = dt.datetime.now()
 
-    for ticker in tickers[:12]:
+    for ticker in tickers:
         print('Starting {}'.format(ticker))
-        if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):
-            df = web.DataReader(ticker, 'yahoo', start, end)
-            df.to_csv('stock_dfs/{}.csv'.format(ticker))
-        else:
-            print('Already have {}'.format(ticker))
+        try:    
+            if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):
+                df = web.DataReader(ticker, 'yahoo', start, end)
+                df.to_csv('stock_dfs/{}.csv'.format(ticker))
+            else:
+                print('Already have {}'.format(ticker))
+        except:
+            print('!!!!Error retrieving data for {}!!!!'.format(ticker))
 
-#  get_data()
+# get_data()
 
 def compile_data():
     with open('sp500tickers.pickle', 'rb') as f:
