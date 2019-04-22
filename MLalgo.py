@@ -2,6 +2,9 @@ from collections import Counter
 import numpy as np 
 import pandas as pd 
 import pickle
+
+from sklearn import svm, model_selection, neighbors
+from sklearn.ensemble import VotingClassifier, RandomForestClassifier
 # import SnP500
 
 def process_data_for_labels(ticker):
@@ -59,4 +62,24 @@ def extract_featuresets(ticker):
 
     return X, y, df
 
-extract_featuresets('AAPL')
+# extract_featuresets('AAPL')
+
+def do_ml(ticker):
+    X, y, df = extract_featuresets(ticker)
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size = 0.25)
+
+    # clf = neighbors.KNeighborsClassifier()
+    clf = VotingClassifier([('lsvc', svm.LinearSVC()),
+                            ('knn', neighbors.KNeighborsClassifier()),
+                            ('rfor', RandomForestClassifier())])
+
+
+    clf.fit(X_train, y_train)
+    confidence = clf.score(X_test, y_test)
+    predictions = clf.predict(X_test)
+    print('Predicted spread: ', Counter(predictions))
+    print('Accuracy: ', confidence)
+
+    return confidence
+
+# do_ml('AAPL')
