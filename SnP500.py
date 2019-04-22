@@ -50,6 +50,11 @@ def get_data(reload_sp500=False):
                 df.to_csv('stock_dfs/{}.csv'.format(ticker))
             else:
                 print('Already have {}'.format(ticker))
+        
+        except KeyboardInterrupt:
+            raise
+            # sys.exit(0)
+        
         except:
             print('!!!!Error retrieving data for {}!!!!'.format(ticker))
 
